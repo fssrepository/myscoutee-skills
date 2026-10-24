@@ -1,0 +1,39 @@
+{
+  "$schema": "../case.schema.json",
+  "schemaVersion": 1,
+  "id": "T007",
+  "title": "Visible success is not accepted as persistence proof",
+  "tags": ["frontend", "backend", "persistence", "verification"],
+  "prompt": "A nested form value appears immediately after Save and the request returns HTTP 200. The current test stops there. Decide whether the task is complete and what evidence is still needed.",
+  "assertions": [
+    {
+      "id": "not-complete-yet",
+      "kind": "required",
+      "description": "The response does not treat the visible update and HTTP status as completion proof.",
+      "patterns": ["not (?:yet )?(?:complete|sufficient|proven)", "does not prove", "isn't (?:enough|proof)", "insufficient"]
+    },
+    {
+      "id": "requires-reload-proof",
+      "kind": "required",
+      "description": "The value must survive reopen/reload or a fresh read.",
+      "patterns": ["save/reload", "reopen", "reload", "fresh (?:read|query|session)", "mutation/read"]
+    },
+    {
+      "id": "traces-round-trip",
+      "kind": "required",
+      "description": "The evidence follows mapping/persistence/read boundaries for the nested value.",
+      "patterns": ["DTO", "mapping", "mapper", "persist", "database", "round trip", "round-trip"]
+    },
+    {
+      "id": "checks-adapter-parity",
+      "kind": "required",
+      "description": "Relevant local/HTTP path parity is considered.",
+      "patterns": ["local/HTTP", "local and HTTP", "both adapters", "HTTP (?:and|versus|vs\\.?) local"]
+    }
+  ],
+  "reviewQuestions": [
+    "Does the proposed proof exercise create/change/clear semantics where relevant?",
+    "Would it catch an in-memory-only update or a mapper dropping the nested field?",
+    "Does the response state what a passing focused test would still not prove?"
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "../case.schema.json",
+  "schemaVersion": 1,
+  "id": "T003",
+  "title": "Demo bootstrap carries one in-memory graph",
+  "tags": ["frontend", "indexeddb", "bootstrap", "efficiency"],
+  "prompt": "Add a new browser demo-bootstrap stage. It needs users, events, and assets, and the existing proposal has each stage read all three collections from IndexedDB for itself.",
+  "assertions": [
+    {
+      "id": "hydrates-once",
+      "kind": "required",
+      "description": "The response calls for one IndexedDB hydration/snapshot rather than reads per stage.",
+      "patterns": ["hydrate[^\\n.]{0,60}once", "load[^\\n.]{0,60}once", "single (?:hydration|snapshot|read)", "one in-memory graph"]
+    },
+    {
+      "id": "passes-state-between-stages",
+      "kind": "required",
+      "description": "Stages receive the in-memory state instead of querying storage again.",
+      "patterns": ["pass[^\\n.]{0,100}(?:in-memory|graph|snapshot|state|context)", "shared in-memory", "same context", "sharing[^\\n.]{0,100}in memory[^\\n.]{0,100}across stages", "carry[^\\n.]{0,80}(?:graph|state|context)"]
+    },
+    {
+      "id": "flags-repeated-boundary-work",
+      "kind": "required",
+      "description": "The repeated IndexedDB access is identified as avoidable boundary/N+1 work.",
+      "patterns": ["N\\+1", "repeated (?:IndexedDB|storage) (?:read|access)", "boundary crossing", "do not re-query IndexedDB", "avoid[^\\n.]{0,80}IndexedDB", "not implement[^\\n.]{0,100}IndexedDB reads per stage", "no per-stage collection reads", "three IndexedDB reads per stage"]
+    },
+    {
+      "id": "preserves-flush-semantics",
+      "kind": "required",
+      "description": "The optimization preserves bounded flush/checkpoint behavior.",
+      "patterns": ["flush", "checkpoint", "completed stage", "persist[^\\n.]{0,80}(?:stage|step)"]
+    }
+  ],
+  "reviewQuestions": [
+    "Does the proposal avoid loading an unbounded dataset while still eliminating repeated storage calls?",
+    "Does it preserve failure/retry semantics for completed bootstrap stages?",
+    "Does it use indexed in-memory lookups where repeated joins are needed?"
+  ]
+}

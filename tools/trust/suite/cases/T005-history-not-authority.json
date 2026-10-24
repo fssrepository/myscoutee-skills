@@ -1,0 +1,33 @@
+{
+  "$schema": "../case.schema.json",
+  "schemaVersion": 1,
+  "id": "T005",
+  "title": "Removed behavior is not blindly restored from history",
+  "tags": ["history", "behavior", "root-cause"],
+  "prompt": "A test began failing after a method was removed. An older commit contains code that makes the test pass. Diagnose what should happen next.",
+  "assertions": [
+    {
+      "id": "history-is-evidence",
+      "kind": "required",
+      "description": "Git history is treated as evidence rather than authorization to restore code.",
+      "patterns": ["history is (?:evidence|context)", "history[^\\n.]{0,100}not (?:authority|permission|authorization)", "old(?:er)? commit[^\\n.]{0,100}not (?:enough|automatically)", "do not (?:blindly |automatically )?restore"]
+    },
+    {
+      "id": "investigates-removal-intent",
+      "kind": "required",
+      "description": "The response investigates why the behavior was removed.",
+      "patterns": ["why (?:it|the method|the behavior) was removed", "removal (?:intent|reason)", "commit that removed", "inspect[^\\n.]{0,80}remov"]
+    },
+    {
+      "id": "checks-current-contract",
+      "kind": "required",
+      "description": "The current contract/test validity is checked before a behavior change.",
+      "patterns": ["current (?:contract|requirement|behavior)", "stale (?:test|expectation)", "test[^\\n.]{0,80}(?:obsolete|outdated|stale)", "expected behavior"]
+    }
+  ],
+  "reviewQuestions": [
+    "Did the model avoid assuming that a green historical test identifies the current owner?",
+    "Did it distinguish intentional removal, stale expectation, and accidental regression?",
+    "Would any proposed restoration have an explicit current behavior contract?"
+  ]
+}

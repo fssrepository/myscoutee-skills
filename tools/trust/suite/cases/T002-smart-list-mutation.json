@@ -1,0 +1,72 @@
+{
+  "$schema": "../case.schema.json",
+  "schemaVersion": 1,
+  "id": "T002",
+  "title": "SmartList mutations avoid full reload",
+  "tags": [
+    "frontend",
+    "smart-list",
+    "mutation",
+    "efficiency"
+  ],
+  "prompt": "Fix the asset availability popup: after editing or deleting an item, the change should appear immediately. The current implementation reloads the entire SmartList after every mutation.",
+  "assertions": [
+    {
+      "id": "uses-visible-item-api",
+      "kind": "required",
+      "description": "The response selects a concrete SmartList reconciliation API.",
+      "patterns": [
+        "patchVisibleItem",
+        "patchConvertedVisibleItem",
+        "upsertConvertedVisibleItem",
+        "removeVisibleItemByIdentity",
+        "removeVisibleItems",
+        "reinsertVisibleItem",
+        "syncVisibleItems"
+      ]
+    },
+    {
+      "id": "rejects-default-reload",
+      "kind": "required",
+      "description": "The response explicitly avoids full reload/refetch as the default mutation path.",
+      "patterns": [
+        "(?:avoid|without|not|do not|instead of)[^\\n.]{0,100}(?:reload|refetch)",
+        "no (?:full )?(?:reload|refetch)",
+        "rather than[^\\n.]{0,100}(?:reload|refetch)",
+        "replace[^\\n.]{0,100}reloadLists",
+        "reload[^\\n.]{0,100}instead of reconcil",
+        "neither[^\\n.]{0,120}(?:loader|page load)",
+        "query[- ]revision[^\\n.]{0,120}not mutations"
+      ]
+    },
+    {
+      "id": "preserves-visible-context",
+      "kind": "required",
+      "description": "The response accounts for visible list identity, order, scroll, selection, or totals.",
+      "patterns": [
+        "stable (?:item )?identity",
+        "trackBy",
+        "scroll",
+        "selection",
+        "visible (?:order|window|total)",
+        "total(?: count)?"
+      ]
+    },
+    {
+      "id": "avoids-unsolicited-polling-question",
+      "kind": "forbidden",
+      "description": "Does not ask an unrelated optional polling question during the requested implementation or fix.",
+      "patterns": [
+        "(?:would you like|do you want|should (?:I|we)|shall (?:I|we))[^\\n.!?]{0,100}(?:polling|background refresh|scheduled refresh)",
+        "(?:ask|confirm|clarify) (?:the user )?(?:whether|if)[^\\n.!?]{0,100}(?:polling|background refresh)",
+        "(?:polling|background refresh)[^\\n.!?]{0,60}(?:yes or no|enabled or disabled)"
+      ]
+    }
+  ],
+  "reviewQuestions": [
+    "Does the proposed operation correctly handle an update that changes filtering or sort membership?",
+    "Is reload retained only for a concrete invalidated-query/cursor/canonical-state exception?",
+    "Would a focused test prove that the loader call count does not increase after the mutation?",
+    "Did the model preserve existing refresh behavior without asking optional polling questions?"
+  ]
+}

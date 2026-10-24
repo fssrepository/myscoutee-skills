@@ -1,0 +1,39 @@
+{
+  "$schema": "../case.schema.json",
+  "schemaVersion": 1,
+  "id": "T004",
+  "title": "Fixture defects do not become Java fallback behavior",
+  "tags": ["backend", "seed", "fixture", "root-cause"],
+  "prompt": "An E2E test fails because a demo seed event is missing a nested field. A teammate suggests adding a Java read fallback that synthesizes the field. Diagnose the correct fix and verification.",
+  "assertions": [
+    {
+      "id": "classifies-fixture-owner",
+      "kind": "required",
+      "description": "The missing canonical seed/fixture is treated separately from Java product logic.",
+      "patterns": ["canonical (?:seed|fixture)", "fixture (?:defect|issue|owner)", "seed (?:defect|issue|owner)", "not (?:a )?Java-owned defect"]
+    },
+    {
+      "id": "rejects-java-repair",
+      "kind": "required",
+      "description": "The response rejects repair/fallback behavior in Java for a fixture-only defect.",
+      "patterns": ["do not add[^\\n.]{0,100}(?:Java )?(?:fallback|repair)", "avoid[^\\n.]{0,100}(?:Java )?(?:fallback|repair)", "should not[^\\n.]{0,100}(?:fallback|synthesi[sz]e)", "fix[^\\n.]{0,80}(?:seed|fixture)[^\\n.]{0,80}(?:instead|rather)", "do not[^\\n.]{0,100}(?:synthesi[sz]e|repair)[^\\n.]{0,100}(?:in )?Java", "read fallback would hide"]
+    },
+    {
+      "id": "separates-forward-mutation",
+      "kind": "required",
+      "description": "The response separately checks whether new writes also produce invalid state.",
+      "patterns": ["forward mutation", "new (?:writes|mutations|records)", "write path", "mutation logic"]
+    },
+    {
+      "id": "verifies-reset-import",
+      "kind": "required",
+      "description": "The proposed proof includes reset/reimport or canonical import verification.",
+      "patterns": ["reset", "reimport", "re-import", "import (?:test|verification)", "clean bootstrap"]
+    }
+  ],
+  "reviewQuestions": [
+    "Did the model require evidence that the defect is fixture-owned before declining a Java change?",
+    "Did it distinguish current disposable data cleanup from canonical seed correction?",
+    "Would the proposed verification prove that the issue stays fixed after reset?"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "$schema": "../case.schema.json",
+  "schemaVersion": 1,
+  "id": "T001",
+  "title": "Popup list preserves requested scope without optional polling questions",
+  "tags": [
+    "frontend",
+    "popup",
+    "smart-list",
+    "polling"
+  ],
+  "prompt": "Create an Angular popup for pending asset handover requests. It should display a list and let an operator create, edit, approve, and delete entries.",
+  "assertions": [
+    {
+      "id": "avoids-unsolicited-polling-question",
+      "kind": "forbidden",
+      "description": "Does not ask an unrelated optional polling question during the requested implementation or fix.",
+      "patterns": [
+        "(?:would you like|do you want|should (?:I|we)|shall (?:I|we))[^\\n.!?]{0,100}(?:polling|background refresh|scheduled refresh)",
+        "(?:ask|confirm|clarify) (?:the user )?(?:whether|if)[^\\n.!?]{0,100}(?:polling|background refresh)",
+        "(?:polling|background refresh)[^\\n.!?]{0,60}(?:yes or no|enabled or disabled)"
+      ]
+    },
+    {
+      "id": "routes-to-smart-list",
+      "kind": "required",
+      "description": "The shared SmartList is considered as the project-first list primitive.",
+      "patterns": [
+        "SmartList",
+        "app-smart-list"
+      ]
+    },
+    {
+      "id": "plans-visible-reconciliation",
+      "kind": "required",
+      "description": "CRUD results are reconciled into the visible list instead of default full reload.",
+      "patterns": [
+        "patchVisibleItem",
+        "upsertConvertedVisibleItem",
+        "removeVisibleItemByIdentity",
+        "reinsertVisibleItem",
+        "in[- ]place",
+        "without (?:a )?(?:full )?(?:reload|refetch)"
+      ]
+    }
+  ],
+  "reviewQuestions": [
+    "Did the model proceed without unsolicited polling or adjacent-capability questions?",
+    "Did it avoid treating polling as mandatory merely because SmartList supports it?",
+    "Did it defer ordering/grouping questions until they become material or explicitly requested?",
+    "Did it keep transport/polling ownership out of the presentation component?"
+  ]
+}
