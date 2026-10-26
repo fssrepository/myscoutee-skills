@@ -1,0 +1,10 @@
+{
+  "project": "myscoutee-skills",
+  "type": "source",
+  "depends_on": [],
+  "variables": {
+    "LAB_GITHUB_REPOSITORY": "fssrepository/myscoutee-skills"
+  },
+  "release_notes": "guides/releases/v{version}.md",
+  "release_name": "MyScoutee Skills"
+}
