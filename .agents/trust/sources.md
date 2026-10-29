@@ -35,7 +35,7 @@ verification. Use the parent summaries and report the missing boundary.
   and intended environments.
 - `server/projects/profile/build.gradle` — Java toolchain, unit, qualification,
   and E2E task definitions.
-- `frontend/package.json` and `frontend/angular.json` — supported frontend
+- `myscoutee-frontend/package.json` and `myscoutee-frontend/angular.json` — supported frontend
   build/serve/test configurations.
 - `server/docker-compose-dev.yml`, `server/docker-compose.e2e.yml`, and
   `packaging/compose/docker-compose.production.yml` — current runtime topology.

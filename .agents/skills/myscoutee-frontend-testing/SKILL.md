@@ -10,7 +10,7 @@ INSPECT THAT REFERENCE FIRST AND COMPARE IT WITH THE TARGET CODE BEFORE MAKING
 CHANGES. REUSE THE REFERENCED IMPLEMENTATION WHERE APPLICABLE. DO NOT SUBSTITUTE
 ASSUMPTIONS, MEMORY, OR A CUSTOM IMPLEMENTATION FOR THIS INSPECTION.**
 
-Use the existing `frontend/package.json` test script and the installed, pinned
+Use the existing `myscoutee-frontend/package.json` test script and the installed, pinned
 components npm package; do not create another runner or cache. Consumers do not
 build a components workspace. Shared-library source, builds and component specs
 belong to the separate `myscoutee-components` repository.
@@ -43,7 +43,7 @@ rewrite the document or append a running narrative.
 2. If running, stop only that container (`docker stop frontend-sync`) and wait
    for its watcher descendants to exit. Do not test if stopping fails or another
    test/build owner remains; resolve that owner first. Leave other services alone.
-3. From `frontend`, run one focused `npm test -- --watch=false` with the needed
+3. From `myscoutee-frontend`, run one focused `npm test -- --watch=false` with the needed
    supported test filter. This uses the consumer's existing Angular test runner
    without compiling the library.
    Never start a second test, build or watcher beside it.
